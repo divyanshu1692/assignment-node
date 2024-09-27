@@ -67,9 +67,9 @@ const resolvers = {
             }
         },
 
-        deleteContact: async (_, { contact }) => {
+        deleteContact: async (_, { id }) => {
             try {
-                const deletedContact = await Contact.findByIdAndDelete(contact.id);
+                const deletedContact = await Contact.findByIdAndDelete(id);
                 if (!deletedContact) {
                     throw new Error('Contact not found');
                 }

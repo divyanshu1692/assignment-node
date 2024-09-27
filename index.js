@@ -3,6 +3,7 @@ const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const mongoose = require('mongoose');
 const dotenv = require("dotenv");
+const cors = require("cors");
 
 const typeDefs = require('./graphql/schema/typeDefs.js');
 const resolvers = require('./graphql/resolvers/index.js');
@@ -12,12 +13,17 @@ const { upload, handleExcelUpload } = require('./controller/excelUploadControlle
 dotenv.config();
 
 const startServer = async () => {
+    const corsOptions = {
+        origin: 'http://localhost:3000',
+        methods: ['POST'],
+    };
     const app = express();
 
     // Connect to MongoDB
     await mongoose.connect(process.env.MONGO_URI);
 
     app.use(authMiddleware);
+    app.use(cors());
     app.post('/api/upload', upload.single('file'), handleExcelUpload);
 
     const server = new ApolloServer({
